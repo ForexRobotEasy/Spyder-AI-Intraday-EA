@@ -1,0 +1,130 @@
+
+// Program: Spyder AI Intraday EA
+// Developer: Forex Robot Easy Team
+// Developer's Site: forexroboteasy.com
+
+// Include necessary libraries
+#include <Trade\Trade.mqh>
+#include <Object\ChartObjects\ChartObjects.mqh>
+#include <Tree\Tree.mqh>
+
+// Define constants
+#define SYMBOL_AUDNZD 'AUDNZD'
+#define SYMBOL_AUDCAD 'AUDCAD'
+#define SYMBOL_EURGBP 'EURGBP'
+
+// Define global variables
+CTrade trade;
+CExpertSignal signal;
+CTree tree;
+
+// Function to initialize the expert advisor
+int OnInit()
+{
+    // Set up trade parameters
+    trade.SetExpertSignal(signal);
+    trade.SetDeviationInPips(10);
+    trade.SetTypeFilling(ORDER_FILLING_IOC);
+    
+    // Add currency pairs to the tree
+    tree.Add(SYMBOL_AUDNZD);
+    tree.Add(SYMBOL_AUDCAD);
+    tree.Add(SYMBOL_EURGBP);
+    
+    return(INIT_SUCCEEDED);
+}
+
+// Function to execute trades based on market analysis
+void TradeExecution()
+{
+    // Perform real-time market analysis using ChatGPT intelligence
+    
+    // Check for buy signals
+    if (signal.iDirection == TRADE_SIGNAL_BUY)
+    {
+        // Execute buy trades for selected currency pairs
+        if (tree.Contains(SYMBOL_AUDNZD))
+        {
+            trade.Buy(SYMBOL_AUDNZD, 1, 0, 0);
+        }
+        if (tree.Contains(SYMBOL_AUDCAD))
+        {
+            trade.Buy(SYMBOL_AUDCAD, 1, 0, 0);
+        }
+        if (tree.Contains(SYMBOL_EURGBP))
+        {
+            trade.Buy(SYMBOL_EURGBP, 1, 0, 0);
+        }
+    }
+    
+    // Check for sell signals
+    if (signal.iDirection == TRADE_SIGNAL_SELL)
+    {
+        // Execute sell trades for selected currency pairs
+        if (tree.Contains(SYMBOL_AUDNZD))
+        {
+            trade.Sell(SYMBOL_AUDNZD, 1, 0, 0);
+        }
+        if (tree.Contains(SYMBOL_AUDCAD))
+        {
+            trade.Sell(SYMBOL_AUDCAD, 1, 0, 0);
+        }
+        if (tree.Contains(SYMBOL_EURGBP))
+        {
+            trade.Sell(SYMBOL_EURGBP, 1, 0, 0);
+        }
+    }
+}
+
+// Function to handle trending and ranging markets
+void MarketAnalysis()
+{
+    // Perform market analysis to determine the market condition
+    
+    // If trending market
+    if (/* condition for trending market */)
+    {
+        // Execute trades based on trending market strategy
+        TradeExecution();
+    }
+    
+    // If ranging market
+    if (/* condition for ranging market */)
+    {
+        // Execute trades based on ranging market strategy
+        TradeExecution();
+    }
+}
+
+// The main trading function
+void OnTick()
+{
+    // Perform market analysis and execute trades
+    MarketAnalysis();
+}
+
+// The deinitialization function
+void OnDeinit(const int reason)
+{
+    // Clean up and deinitialize the expert advisor
+    trade.Deinit();
+    signal.Deinit();
+    tree.Deinit();
+}
+
+// The entry point of the expert advisor
+void OnStart()
+{
+    // Initialize the expert advisor
+    OnInit();
+    
+    // Start trading
+    while (!IsStopped())
+    {
+        OnTick();
+        Sleep(1000);
+    }
+    
+    // Deinitialize the expert advisor
+    OnDeinit(REASON_REMOVE);
+}
